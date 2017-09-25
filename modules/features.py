@@ -38,27 +38,39 @@ class FeatureExtraction:
 
             count += 1
 
-    def prepare_data(self, test_dataset = False):
+    def prepare_data(self, features_state, test_dataset = False):
         X = []
         Y = []
 
         # Prepare features
-        f1 = FeaturesF1(self.utils, self.dataset)
-        f2 = FeaturesF2(self.utils, self.dataset)
-        f3 = FeaturesF3(self.utils, self.dataset)
+        f1 = None
+        f2 = None
+        f3 = None
+
+        if features_state[0]:
+            f1 = FeaturesF1(self.utils, self.dataset)
+        
+        if features_state[1]:
+            f2 = FeaturesF2(self.utils, self.dataset)
+        
+        if features_state[2]:
+            f3 = FeaturesF3(self.utils, self.dataset)
 
         for rel in self.dataset.relation:
             # Extract features
             features = []
 
             # [1] Features Przemek
-            features += f1.get_features(rel)
+            if f1:
+                features += f1.get_features(rel)
 
             # [2] Features Samantha
-            features += f2.get_features(rel)
+            if f2:
+                features += f2.get_features(rel)
 
             # [3] Features Chathuri
-            features += f3.get_features(rel)
+            if f3:
+                features += f3.get_features(rel)
     
             # Append features
             X.append(features)

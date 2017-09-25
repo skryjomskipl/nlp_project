@@ -18,16 +18,22 @@ test_key.read()
 utils = Utils()
 features = FeatureExtraction(utils)
 
+# Enable features in this order: Przemek, Samantha, Chathuri
+features_state = [True, True, True]
+
 # Create training set
 features.set_dataset(train)
-train_X, train_Y = features.prepare_data()
+train_X, train_Y = features.prepare_data(features_state)
 
 # Create test set
 features.set_dataset(test)
-test_X, test_Y = features.prepare_data(test_dataset = True)
+test_X, test_Y = features.prepare_data(features_state, test_dataset = True)
+
+# TODO: You can provide development set by randomizing/shuffling training set.
+#       Then you need to alter of course code below.
 
 # Classify
-clf = utils.get_classifier("SVM")
+clf = utils.get_classifier("Naive Bayes")
 clf = clf.fit(train_X, train_Y)
 test_Y = clf.predict(test_X)
 
