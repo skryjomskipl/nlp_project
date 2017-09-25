@@ -79,6 +79,10 @@ class Dataset:
             return False
 
         for line in fp:
+            # Check if line is empty
+            if not line.strip():
+                continue
+
             # Prepare data
             abstract = ""
             a = ""
