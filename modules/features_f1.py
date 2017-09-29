@@ -11,6 +11,56 @@ class FeaturesF1:
         self.utils = utils
         self.dataset = dataset
     
+    def __get_sentence_objects(self, abstract, a, b):
+        # NOTE:  I know that it is the most lame approach ever, but who cares... ;)
+
+        l_id = 0
+        r_id = 0
+        delimiters = ['.', '!', '?']
+
+        # Find the beginning of the sentence
+        i = a
+        while i >= 0:
+            if len([x for x in delimiters if x in abstract.obj[i].value]) > 0:
+                l_id = i + 1
+                break
+
+            i = i - 1
+        
+        # Find the end of sentence
+        i = b
+
+        while i < len(abstract.obj):
+            if len([x for x in delimiters if x in abstract.obj[i].value]) > 0:
+                r_id = i
+                break
+
+            i = i + 1
+        
+        objs = abstract.obj[l_id : r_id]
+        a_id = a - l_id
+        b_id = b - l_id
+
+        return objs, a_id, b_id
+
+    def __get_feature_from_rule(self, utils, objects):
+        sentence = ""
+
+        i = 0
+        while i < len(objects):
+            val = objects[i].value
+            sentence = sentence + " " + val
+
+            i = i + 1
+
+        if "than" in sentence:
+            return utils.get_level_from_name("COMPARE")
+
+        if "which" in sentence:
+            return utils.get_level_from_name("TOPIC")
+
+        return 0
+    
     def get_features(self, rel):
         X = []
 
@@ -43,5 +93,9 @@ class FeaturesF1:
 
         # NOTE: Taking into account 'reverse' in any way in this task seems to hurt performance as of now.
         #       Maybe later we can do something with this...
+
+        # Feature 3 - Rule based extraction for boosting prediction of the less represented classes
+        objects, a_id, b_id = self.__get_sentence_objects(abstract, min(a), min(b))
+        X.append(self.__get_feature_from_rule(self.utils, objects))
 
         return X

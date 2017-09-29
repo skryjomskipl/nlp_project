@@ -29,11 +29,11 @@ class Utils:
 
     def get_classifier(self, name):
         if name == "Decision Tree":
-            return tree.DecisionTreeClassifier()
+            return tree.DecisionTreeClassifier(criterion = "entropy", random_state = 1)
         elif name == "Naive Bayes":
             return GaussianNB()
         elif name == "SVM":
-            return SVC()
+            return SVC(C = 10)
         else:
             print("Unknown classifier name provided!")
             return None
