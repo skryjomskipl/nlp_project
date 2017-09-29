@@ -33,7 +33,7 @@ test_X, test_Y = features.prepare_data(features_state, test_dataset = True)
 #       Then you need to alter of course code below.
 
 # Classify
-clf = utils.get_classifier("Naive Bayes")
+clf = utils.get_classifier("Decision Tree")
 clf = clf.fit(train_X, train_Y)
 test_Y = clf.predict(test_X)
 
