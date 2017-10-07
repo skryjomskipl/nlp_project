@@ -52,3 +52,9 @@ class Abstract:
         self.obj.append(obj)
 
         return True
+    
+    def get_word_beforeE1(self, id):
+        """Retuen the fisrt word befor the first entity"""
+        a=self.get_entity_ids(id);
+
+        return a
