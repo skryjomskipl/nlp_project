@@ -8,7 +8,7 @@ import code
 import copy
 import random
 
-train = Dataset('data/subtask11/1.1.train.text.xml', 'data/subtask11/1.1.train.relations.txt')
+train = Dataset('data/subtask11/new/1.1.text.xml', 'data/subtask11/new/1.1.relations.txt')
 train.read()
 
 # Prepare utilities
