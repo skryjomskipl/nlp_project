@@ -1,4 +1,4 @@
-# Development set
+# Subtask 1.1 - Split 60/40 of Development set (old)
 #
 
 from dataset import *
@@ -8,7 +8,11 @@ import code
 import copy
 import random
 
-train = Dataset('data/subtask11/1.1.train.text.xml', 'data/subtask11/1.1.train.relations.txt')
+# Subtask 1.1
+train_data = 'data/subtask11/1.1.train.text.xml'
+train_rel = 'data/subtask11/1.1.train.relations.txt'
+
+train = Dataset(train_data, train_rel)
 train.read()
 
 # Prepare utilities
@@ -29,8 +33,12 @@ test = copy.deepcopy(train)
 random.seed(0)
 random.shuffle(test.relation)
 
-# Leave only half of it
-test_start = round(len(test.relation)/2)
+# Do a 60/40 split
+train_start = round(len(train.relation) * 0.6)
+train_end = len(train.relation)
+del train.relation[train_start:train_end]
+
+test_start = round(len(test.relation) * 0.4)
 test_end = len(test.relation)
 del test.relation[test_start:test_end]
 

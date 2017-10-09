@@ -1,17 +1,25 @@
-# Entry point for testing
+# Subtask 1.1 - Test set (old)
 #
 
 from dataset import *
 from common import *
 from modules import *
 
-train = Dataset('data/subtask11/1.1.train.text.xml', 'data/subtask11/1.1.train.relations.txt')
+# Subtask 1.1
+train_data = 'data/subtask11/1.1.train.text.xml'
+train_rel = 'data/subtask11/1.1.train.relations.txt'
+
+test_data = 'data/subtask11/1.1.test.text.xml'
+test_rel = 'data/subtask11/1.1.test.relations.txt'
+test_key = 'data/subtask11/1.1.test.key.txt'
+
+train = Dataset(train_data, train_rel)
 train.read()
 
-test = Dataset('data/subtask11/1.1.test.text.xml', 'data/subtask11/1.1.test.relations.txt', test_dataset = True)
+test = Dataset(test_data, test_rel, test_dataset = True)
 test.read()
 
-test_key = Dataset('data/subtask11/1.1.test.text.xml', 'data/subtask11/1.1.test.key.txt')
+test_key = Dataset(test_data, test_key)
 test_key.read()
 
 # Prepare utilities
