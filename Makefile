@@ -7,7 +7,7 @@ PIP=pip
 all:
 	@echo "Possible actions:"
 	@echo " init"
-	@echo " clean"
+	@echo " release"
 	@echo " subtask11_dev"
 	@echo " subtask11_test"
 	@echo " subtask11_spit"
@@ -28,5 +28,9 @@ subtask11_split:
 subtask11_kcv:
 	$(PYTHON) script4.py
 
-clean:
+release:
 	find . -name '*.pyc' -exec rm -f {} \;
+	echo "# nlp_project" > README.md
+	cat INSTALL >> README.md
+	echo "# Dependencies" >> README.md
+	cat ORIGIN >> README.md
