@@ -1,11 +1,17 @@
 # NLP Project Makefile
 #
 
-PYTHON=python3
-PIP=pip3
+PYTHON=python
+PIP=pip
 
 all:
-	@echo "Possible options: init, test"
+	@echo "Possible actions:"
+	@echo " init"
+	@echo " clean"
+	@echo " subtask11_dev"
+	@echo " subtask11_test"
+	@echo " subtask11_spit"
+	@echo " subtask11_kcv"
 
 init:
 	$(PIP) install -r requirements.txt
