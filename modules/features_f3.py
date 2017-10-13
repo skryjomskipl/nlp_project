@@ -1,5 +1,5 @@
 # Features #3
-#
+# This file is create by Chathuri and Samantha , 5 features were implemented.  
 import nltk
 from nltk.stem import PorterStemmer
 from nltk.tokenize import sent_tokenize, word_tokenize
@@ -150,7 +150,7 @@ class FeaturesF3:
         return (str_id-max(b))-stop_word_count
     
     def __feature6 (self, abstract, rel):
-        
+        # checking pos tag of words before E1 , window size=2
         abstract = self.dataset.get_abstract(rel.abstract)   
         #print("-> ", a)
         tokens = []
