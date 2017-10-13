@@ -39,9 +39,6 @@ train_X, train_Y = features.prepare_data(features_state)
 features.set_dataset(test)
 test_X, test_Y = features.prepare_data(features_state, test_dataset = True)
 
-# TODO: You can provide development set by randomizing/shuffling training set.
-#       Then you need to alter of course code below.
-
 # Classify
 clf = utils.get_classifier("Decision Tree")
 clf = clf.fit(train_X, train_Y)
