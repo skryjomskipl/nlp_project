@@ -1,4 +1,4 @@
-# Utilities
+# Written by: Przemyslaw Skryjomski
 
 from sklearn import tree
 from sklearn.naive_bayes import GaussianNB

@@ -1,5 +1,4 @@
-# Features #1
-#
+# Written by: Przemyslaw Skryjomski
 
 import nltk
 

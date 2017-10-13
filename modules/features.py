@@ -1,4 +1,4 @@
-# Feature Extraction
+# Written by: Przemyslaw Skryjomski
 
 from dataset import *
 from .features_f1 import FeaturesF1

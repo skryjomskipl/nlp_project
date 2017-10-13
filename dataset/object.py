@@ -1,5 +1,4 @@
-# Object (keyword)
-#
+# Written by: Przemyslaw Skryjomski
 
 class Object:
     value = ''

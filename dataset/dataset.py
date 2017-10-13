@@ -1,4 +1,4 @@
-# Dataset class
+# Written by: Przemyslaw Skryjomski
 
 from dataset.object import Object
 from dataset.abstract import Abstract

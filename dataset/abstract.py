@@ -1,5 +1,5 @@
-# Abstract (article)
-#get_word_beforeE1 function implemented by chathuri and Samantha
+# Written by: Przemyslaw Skryjomski
+# The get_word_beforeE1 function written by Chathuri and Samantha
 
 from dataset.object import Object
 

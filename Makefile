@@ -1,3 +1,5 @@
+# Written by: Przemyslaw Skryjomski
+
 # NLP Project Makefile
 #
 

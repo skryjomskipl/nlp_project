@@ -1,3 +1,5 @@
+# Written by: Przemyslaw Skryjomski
+
 # Subtask 1.1 - kCV (new)
 #
 

@@ -1,6 +1,3 @@
-# Features #2
-#
-
 class FeaturesF2:
     utils = None
     dataset = None

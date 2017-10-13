@@ -1,4 +1,4 @@
-# Relation class
+# Written by: Przemyslaw Skryjomski
 
 class Relation:
     abstract = ""
