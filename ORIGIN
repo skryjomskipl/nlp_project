@@ -1,0 +1,9 @@
+Proposed solution depends on the following off-the-shelf libraries:
+
+- NLTK
+ Website: http://www.nltk.org
+
+- Scikit-Learn, website:
+ Website: http://scikit-learn.org/stable/
+
+Both of them can be installed by following the instructions provided in the INSTALL file.

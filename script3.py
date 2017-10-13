@@ -1,4 +1,4 @@
-# Subtask 1.1 - Split 60/40 of Development set (old)
+# Subtask 1.1 - Split 60/40 (new)
 #
 
 from dataset import *
@@ -8,9 +8,8 @@ import code
 import copy
 import random
 
-# Subtask 1.1
-train_data = 'data/subtask11/1.1.train.text.xml'
-train_rel = 'data/subtask11/1.1.train.relations.txt'
+train_data = 'data/subtask11/new/1.1.text.xml'
+train_rel = 'data/subtask11/new/1.1.relations.txt'
 
 train = Dataset(train_data, train_rel)
 train.read()

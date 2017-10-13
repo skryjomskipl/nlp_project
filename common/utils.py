@@ -55,4 +55,4 @@ class Utils:
         return skl_metrics.accuracy_score(y_true, y_pred)*100
     
     def get_fmeasure(self, y_true, y_pred):
-        return skl_metrics.f1_score(y_true, y_pred, average = 'macro')*100
+        return skl_metrics.f1_score(y_true, y_pred, average = 'macro') * 100

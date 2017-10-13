@@ -29,6 +29,9 @@ class Dataset:
             abstract.append_object(o)
 
     def __parse_abstract_split(self, abstract, x):
+        if x == None:
+            return
+
         for i in x.split():
             o = Object(i)
             abstract.append_object(o)
@@ -37,8 +40,9 @@ class Dataset:
         self.__parse_abstract_split(abstract, c.text)
 
         for x in c:
-            self.__parse_abstract_entity(abstract, x.attrib, x.text)
-            self.__parse_abstract_split(abstract, x.tail)
+            if not x.tag == 'SectionTitle':
+                self.__parse_abstract_entity(abstract, x.attrib, x.text)
+                self.__parse_abstract_split(abstract, x.tail)
 
     def __parse(self):
         """PRIVATE - Parsing dataset"""
@@ -122,6 +126,8 @@ class Dataset:
             # Add them to the container
             rel = Relation(abstract, a, b, type, reverse)
             self.relation.append(rel)
+
+            #print(rel.type, ' ', rel.abstract, ' ', rel.a, ' ', rel.b, ' ', rel.reverse, sep = '')
 
         return True
 
