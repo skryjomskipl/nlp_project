@@ -72,5 +72,5 @@ m_accuracy = round(m_accuracy/kCV, 2)
 m_fmeasure = round(m_fmeasure/kCV, 2)
 
 print("\n=> Metrics")
-print("Accuracy: ", m_accuracy, "%", sep = '')
-print("F-Measure: ", m_fmeasure, "%", sep = '')
+print("Accuracy:          ", m_accuracy, "%", sep = '')
+print("F-Measure:         ", m_fmeasure, "%", sep = '')

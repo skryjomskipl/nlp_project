@@ -66,5 +66,5 @@ features.set_dataset(test_key)
 test_key_Y = features.get_dataset_key()
 
 print("\n=> Metrics")
-print("Accuracy: ", round(utils.get_accuracy(test_key_Y, test_Y), 2), "%", sep = '')
-print("F-Measure: ", round(utils.get_fmeasure(test_key_Y, test_Y), 2), "%", sep = '')
+print("Accuracy:          ", round(utils.get_accuracy(test_key_Y, test_Y), 2), "%", sep = '')
+print("F-Measure:         ", round(utils.get_fmeasure(test_key_Y, test_Y), 2), "%", sep = '')
