@@ -3,7 +3,7 @@
 # NLP Project Makefile
 #
 
-PYTHON=python
+PYTHON=python3
 PIP=pip
 
 all:

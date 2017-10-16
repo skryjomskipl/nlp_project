@@ -8,8 +8,13 @@ from common import *
 from modules import *
 
 # Subtask 1.1
-train_data = 'data/subtask11/1.1.train.text.xml'
-train_rel = 'data/subtask11/1.1.train.relations.txt'
+#train_data = 'data/subtask11/1.1.train.text.xml'
+#train_rel = 'data/subtask11/1.1.train.relations.txt'
+
+# Training on new dataset gives nice boost!
+# The more data in training corpus, the better.
+train_data = 'data/subtask11/new/1.1.text.xml'
+train_rel = 'data/subtask11/new/1.1.relations.txt'
 
 test_data = 'data/subtask11/1.1.test.text.xml'
 test_rel = 'data/subtask11/1.1.test.relations.txt'

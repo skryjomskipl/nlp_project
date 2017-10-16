@@ -5,8 +5,11 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 import sklearn.metrics as skl_metrics
 
+from nltk.tag.perceptron import PerceptronTagger
+
 class Utils:
     levels = {}
+    pos_tagger = None
 
     def __init__(self):
         # Prepare levels
@@ -16,6 +19,7 @@ class Utils:
         self.levels["PART_WHOLE"] = 4
         self.levels["TOPIC"] = 5
         self.levels["COMPARE"] = 6
+        self.pos_tagger = PerceptronTagger()
     
     def get_level_from_name(self, name):
         return self.levels[name]
@@ -37,6 +41,9 @@ class Utils:
         else:
             print("Unknown classifier name provided!")
             return None
+    
+    def get_pos_tags(self, tokens):
+        return self.pos_tagger.tag(tokens)
     
     def get_feature_from_pos_tagger(self, tag):
         tags = [
