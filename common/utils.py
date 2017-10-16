@@ -7,6 +7,9 @@ import sklearn.metrics as skl_metrics
 
 from nltk.tag.perceptron import PerceptronTagger
 
+import random
+import copy
+
 class Utils:
     levels = {}
     pos_tagger = None
@@ -63,3 +66,31 @@ class Utils:
     
     def get_fmeasure(self, y_true, y_pred):
         return skl_metrics.f1_score(y_true, y_pred, average = 'macro') * 100
+
+    def do_split(self, data, train_perc, seed = 0):
+        if train_perc >= 1 or train_perc <= 0:
+            print("Error, train equals ", train_perc, ", must be in (0, 1) range. Bailing out.", sep = '')
+            quit()
+
+        # Randomize
+        tmp_data = copy.deepcopy(data)
+
+        random.seed(0)
+        random.shuffle(tmp_data.relation)
+
+        # Copy training set
+        train = copy.deepcopy(tmp_data)
+
+        # Copy training set to test set
+        test = copy.deepcopy(tmp_data)
+
+        # Split
+        train_start = round(len(train.relation) * train_perc)
+        train_end = len(train.relation)
+        del train.relation[train_start:train_end]
+
+        test_start = 0
+        test_end = round(len(test.relation) * train_perc)
+        del test.relation[test_start:test_end]
+
+        return train, test

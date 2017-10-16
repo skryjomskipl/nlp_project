@@ -97,25 +97,4 @@ class FeaturesF1:
         objects, a_id, b_id = self.__get_sentence_objects(abstract, min(a), min(b))
         X.append(self.__get_feature_from_rule(self.utils, objects))
 
-        # Feature 4 - Length of meaningful words of entities
-        a_val = abstract.obj[max(a)].value
-        b_val = abstract.obj[min(b)].value
-        a_len = len(a_val)
-        b_len = len(b_val)
-
-        X.append(a_len)
-        X.append(b_len)
-
-        # Feature 5 - Length of all words of entities
-        a_len = 0
-        for i in a:
-            a_len += len(abstract.obj[i].value)
-
-        b_len = 0
-        for i in b:
-            b_len += len(abstract.obj[i].value)
-        
-        X.append(a_len)
-        X.append(b_len)
-
         return X
