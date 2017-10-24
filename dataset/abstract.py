@@ -7,6 +7,7 @@ class Abstract:
     id = ''
     title = ''
     obj = None
+    text = ''
 
     def __init__(self, id):
         """ctor"""
@@ -50,8 +51,16 @@ class Abstract:
     def append_object(self, obj):
         """Appends object, returns False if one already exist"""
         self.obj.append(obj)
+        self.text = self.text + obj.value + ' '
 
         return True
+    
+    def finalize(self):
+        """Remove space from the last object appended in abstract raw text"""
+        text_length = len(self.text)
+
+        if text_length > 0:
+            self.text = self.text[:text_length - 1]
     
     def get_word_beforeE1(self, id):
         """Retuen the fisrt word befor the first entity"""

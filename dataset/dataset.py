@@ -72,6 +72,7 @@ class Dataset:
                 elif c.tag == 'abstract':
                     self.__parse_abstract(abstract, c)
 
+            abstract.finalize()
             self.abstract.append(abstract)
 
         return True
