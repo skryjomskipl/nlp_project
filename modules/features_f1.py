@@ -1,7 +1,5 @@
 # Written by: Przemyslaw Skryjomski
 
-import nltk
-
 class FeaturesF1:
     utils = None
     dataset = None
@@ -68,8 +66,11 @@ class FeaturesF1:
         a = abstract.get_entity_ids(rel.a)
         b = abstract.get_entity_ids(rel.b)
 
-        # Feature 1 - Word distance between tags
-        distance = min(b)-max(a)
+        # Feature 1 - Word distance between tags after lowercasing and stopwords removal
+        objs_between_entities = abstract.obj[max(a):min(b)]
+        objs_processed = [obj for obj in objs_between_entities if not obj.value.lower() in self.utils.get_stopwords()]
+
+        distance = len(objs_processed)
         X.append(distance)
 
         # Feature 2 - POS tag of the last word in the entity sequence

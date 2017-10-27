@@ -6,6 +6,7 @@ from sklearn.svm import SVC
 import sklearn.metrics as skl_metrics
 
 from nltk.tag.perceptron import PerceptronTagger
+import nltk.corpus as nltk_corpus
 
 import random
 import copy
@@ -13,6 +14,7 @@ import copy
 class Utils:
     levels = {}
     pos_tagger = None
+    stopwords = None
 
     def __init__(self):
         # Prepare levels
@@ -23,6 +25,7 @@ class Utils:
         self.levels["TOPIC"] = 5
         self.levels["COMPARE"] = 6
         self.pos_tagger = PerceptronTagger()
+        self.stopwords = nltk_corpus.stopwords.words('english')
     
     def get_level_from_name(self, name):
         return self.levels[name]
@@ -44,6 +47,9 @@ class Utils:
         else:
             print("Unknown classifier name provided!")
             return None
+    
+    def get_stopwords(self):
+        return self.stopwords
     
     def get_pos_tags(self, tokens):
         return self.pos_tagger.tag(tokens)
