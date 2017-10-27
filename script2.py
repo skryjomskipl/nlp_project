@@ -15,18 +15,18 @@ test_data = 'data/subtask11/1.1.test.text.xml'
 test_rel = 'data/subtask11/1.1.test.relations.txt'
 test_key = 'data/subtask11/1.1.test.key.txt'
 
-train = Dataset(train_data, train_rel)
-train.read()
-
-test = Dataset(test_data, test_rel, test_dataset = True)
-test.read()
-
-test_key = Dataset(test_data, test_key)
-test_key.read()
-
 # Prepare utilities
 utils = Utils()
 features = FeatureExtraction(utils)
+
+train = Dataset(train_data, train_rel)
+train.read(utils)
+
+test = Dataset(test_data, test_rel, test_dataset = True)
+test.read(utils)
+
+test_key = Dataset(test_data, test_key)
+test_key.read(utils)
 
 # Enable features in this order: Przemek, Samantha, Chathuri
 features_state = [True, False, False]

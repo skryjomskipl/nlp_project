@@ -14,12 +14,12 @@ train_data = 'data/subtask11/new/1.1.text.xml'
 train_rel = 'data/subtask11/new/1.1.relations.txt'
 kCV = 5
 
-data = Dataset(train_data, train_rel)
-data.read()
-
 # Prepare utilities
 utils = Utils()
 features = FeatureExtraction(utils)
+
+data = Dataset(train_data, train_rel)
+data.read(utils)
 
 # Enable features in this order: Przemek, Samantha, Chathuri
 features_state = [True, False, False]

@@ -44,7 +44,7 @@ class Dataset:
                 self.__parse_abstract_entity(abstract, x.attrib, x.text)
                 self.__parse_abstract_split(abstract, x.tail)
 
-    def __parse(self):
+    def __parse(self, utils):
         """PRIVATE - Parsing dataset"""
         fp = xml.etree.ElementTree.parse(self.path)
         if not fp:
@@ -72,12 +72,12 @@ class Dataset:
                 elif c.tag == 'abstract':
                     self.__parse_abstract(abstract, c)
 
-            abstract.finalize()
+            abstract.finalize(utils)
             self.abstract.append(abstract)
 
         return True
 
-    def __parse_relations(self):
+    def __parse_relations(self, utils):
         """PRIVATE: Parsing relations"""
         fp = open(self.path_relations)
         if not fp:
@@ -132,17 +132,17 @@ class Dataset:
 
         return True
 
-    def read(self):
+    def read(self, utils):
         """Reading dataset"""
         print('Reading dataset from path: ', self.path, sep = '')
 
-        if not self.__parse():
+        if not self.__parse(utils):
             print('Failed at parsing dataset!')
             return False
 
         print('Reading relations from path: ', self.path_relations, sep = '')
 
-        if not self.__parse_relations():
+        if not self.__parse_relations(utils):
             print('Failed at parsing relations!')
             return False
 

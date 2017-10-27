@@ -8,6 +8,7 @@ class Abstract:
     title = ''
     obj = None
     text = ''
+    pos_tags = None
 
     def __init__(self, id):
         """ctor"""
@@ -55,12 +56,21 @@ class Abstract:
 
         return True
     
-    def finalize(self):
-        """Remove space from the last object appended in abstract raw text"""
+    def finalize(self, utils):
+        """Do some postprocessing stuff with abstract"""
+
+        # Remove space from the last object appended in abstract raw text
         text_length = len(self.text)
 
         if text_length > 0:
             self.text = self.text[:text_length - 1]
+
+        # Apply POS tagging on abstract
+        tokens = []
+        for obj in self.obj:
+            tokens.append(obj.value)
+        
+        self.pos_tags = utils.get_pos_tags(tokens)
     
     def get_word_beforeE1(self, id):
         """Retuen the fisrt word befor the first entity"""

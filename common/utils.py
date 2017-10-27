@@ -5,8 +5,8 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 import sklearn.metrics as skl_metrics
 
+import nltk
 from nltk.tag.perceptron import PerceptronTagger
-import nltk.corpus as nltk_corpus
 
 import random
 import copy
@@ -25,7 +25,7 @@ class Utils:
         self.levels["TOPIC"] = 5
         self.levels["COMPARE"] = 6
         self.pos_tagger = PerceptronTagger()
-        self.stopwords = nltk_corpus.stopwords.words('english')
+        self.stopwords = nltk.corpus.stopwords.words('english')
     
     def get_level_from_name(self, name):
         return self.levels[name]
@@ -52,7 +52,8 @@ class Utils:
         return self.stopwords
     
     def get_pos_tags(self, tokens):
-        return self.pos_tagger.tag(tokens)
+        tagset = None
+        return nltk.tag._pos_tag(tokens, tagset, self.pos_tagger)
     
     def get_feature_from_pos_tagger(self, tag):
         tags = [
@@ -81,7 +82,7 @@ class Utils:
         # Randomize
         tmp_data = copy.deepcopy(data)
 
-        random.seed(0)
+        random.seed(seed)
         random.shuffle(tmp_data.relation)
 
         # Copy training set

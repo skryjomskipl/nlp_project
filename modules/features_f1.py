@@ -74,20 +74,12 @@ class FeaturesF1:
         X.append(distance)
 
         # Feature 2 - POS tag of the last word in the entity sequence
-        tokens = []
-
-        for obj in abstract.obj:
-            tokens.append(obj.value)
-        
-        tokens_pos = self.utils.get_pos_tags(tokens)
-
         a_id = max(a)
         b_id = max(b)
         
-        a_pos = tokens_pos[a_id][1]
-        b_pos = tokens_pos[b_id][1]
+        a_pos = abstract.pos_tags[a_id][1]
+        b_pos = abstract.pos_tags[b_id][1]
 
-        # Include POS tags into a feature vector
         X.append(self.utils.get_feature_from_pos_tagger(a_pos))
         X.append(self.utils.get_feature_from_pos_tagger(b_pos))
 

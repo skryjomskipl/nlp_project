@@ -13,12 +13,12 @@ import random
 train_data = 'data/subtask11/new/1.1.text.xml'
 train_rel = 'data/subtask11/new/1.1.relations.txt'
 
-train = Dataset(train_data, train_rel)
-train.read()
-
 # Prepare utilities
 utils = Utils()
 features = FeatureExtraction(utils)
+
+train = Dataset(train_data, train_rel)
+train.read(utils)
 
 # Enable features in this order: Przemek, Samantha, Chathuri
 features_state = [True, False, False]
