@@ -9,6 +9,7 @@ class Abstract:
     obj = None
     text = ''
     pos_tags = None
+    tf_idf = None
 
     def __init__(self, id):
         """ctor"""
@@ -18,6 +19,10 @@ class Abstract:
     def set_title(self, title):
         """Sets title"""
         self.title = title
+
+    def set_tf_idf(self, tf_idf):
+        """Sets tf idf"""
+        self.tf_idf = tf_idf
 
     def get_object(self, name):
         """Object getter, returns None if not found"""
@@ -73,7 +78,7 @@ class Abstract:
         self.pos_tags = utils.get_pos_tags(tokens)
     
     def get_word_beforeE1(self, id):
-        """Retuen the fisrt word befor the first entity"""
-        a=self.get_entity_ids(id);
+        """Return the first word before the first entity"""
+        a = self.get_entity_ids(id)
 
         return a
