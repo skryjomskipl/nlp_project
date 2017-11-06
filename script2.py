@@ -29,7 +29,9 @@ test_key = Dataset(test_data, test_key)
 test_key.read(utils)
 
 # Enable features in this order: Przemek, Samantha, Chathuri
-features_state = [True, False, False]
+#features_state = [True, False, False]
+features_state = [False, False, True]
+#features_state = [False, True, False]
 
 # Create training set
 features.set_dataset(train)
