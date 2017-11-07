@@ -73,6 +73,12 @@ class Utils:
     
     def get_fmeasure(self, y_true, y_pred):
         return skl_metrics.f1_score(y_true, y_pred, average = 'macro') * 100
+   
+    def get_precision(self, y_true, y_pred):
+        return skl_metrics.precision_score(y_true, y_pred, average = 'macro') * 100
+    
+    def get_recall(self, y_true, y_pred):
+        return skl_metrics.recall_score(y_true, y_pred, average='macro')  
 
     def do_split(self, data, train_perc, seed = 0):
         if train_perc >= 1 or train_perc <= 0:
