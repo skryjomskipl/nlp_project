@@ -1,5 +1,5 @@
 # Written by: Przemyslaw Skryjomski
-
+# Precision, recall evaluation metrics added - Samantha
 # Subtask 1.1 - kCV (new)
 #
 
@@ -61,3 +61,5 @@ m_fmeasure = round(m_fmeasure/kCV, 2)
 print("\n=> Metrics")
 print("Accuracy:          ", m_accuracy, "%", sep = '')
 print("F-Measure:         ", m_fmeasure, "%", sep = '')
+print("Precision:          ", round(utils.get_precision(test_key_Y, test_Y), 2), "%", sep = '')
+print("Recall:         ", round(utils.get_recall(test_key_Y, test_Y), 2), "%", sep = '')

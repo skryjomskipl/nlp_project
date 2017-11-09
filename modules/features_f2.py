@@ -2,6 +2,7 @@
 # This file is created by  Samantha 
 
 import nltk
+from common import *
 from .bigram import Bigram
 from nltk.stem import PorterStemmer
 from nltk.tokenize import sent_tokenize, word_tokenize
@@ -27,7 +28,7 @@ class FeaturesF2:
         'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now']
       
     
-    def __first_word_after_E1(self,abstract,rel):
+    def __first_word_after_E1(self,abstract,rel,flag):
           #First word after the first Entity E1 but in between the entities
         
         delimeter=['.']     
@@ -44,8 +45,10 @@ class FeaturesF2:
                 break
             if '.' in abstract.obj[i].value.lower():
                 break 
-            if abstract.obj[i].value.lower() not in self.stop_words:
-                break   
+            #stop words removed
+            if flag == 1:
+                if abstract.obj[i].value.lower() not in self.stop_words:
+                    break  
             i=i+1  
             
         word = abstract.obj[i].value.lower()
@@ -54,7 +57,10 @@ class FeaturesF2:
          
       
         #calculate bigram
-        bigram = Bigram.get_abstract(ps.stem(word))
+        utils = Utils()
+        bb= Bigram(utils)
+        bigram = bb.get_bigram(ps.stem(word))
+        print("bigrams :   ",bigram)
         if bigram:
             for x in bigram:
                 bb=x[1]
@@ -64,7 +70,7 @@ class FeaturesF2:
         return bb
     
         
-    def __first_word_before_E2(self,abstract,rel):
+    def __first_word_before_E2(self,abstract,rel,flag):
           #First word before the second Entity E2 but in between the entities
         
         delimeter=['.']     
@@ -81,8 +87,11 @@ class FeaturesF2:
                 break
             if '.' in abstract.obj[i].value.lower():
                 break 
-            if abstract.obj[i].value.lower() not in self.stop_words:
-                break   
+            #stop words removed
+            if flag == 1:
+                if abstract.obj[i].value.lower() not in self.stop_words:
+                    break
+                     
             i=i-1  
             
         word = abstract.obj[i].value.lower()
@@ -101,7 +110,7 @@ class FeaturesF2:
         return bb
     
     
-    def __words_between_Entities(self,abstract,rel):
+    def __words_between_Entities(self,abstract,rel,flag):
           #Other words in between the two entities
         
         delimeter=['.'] 
@@ -122,11 +131,17 @@ class FeaturesF2:
                 break
             if '.' in abstract.obj[i].value.lower():
                 break 
-            #if abstract.obj[i].value.lower() not in self.stop_words:
-                #word = abstract.obj[i].value.lower()
-                #words.append(ps.stem(word)) 
-            word = abstract.obj[i].value.lower()
-            words.append(ps.stem(word)) 
+            #stop words removed
+            if flag == 1:
+                if abstract.obj[i].value.lower() not in self.stop_words:
+                    word = abstract.obj[i].value.lower()
+                    words.append(ps.stem(word)) 
+                 
+            #stop words not removed
+            if flag == 0:
+                word = abstract.obj[i].value.lower()
+                words.append(ps.stem(word)) 
+                 
             i=i+1  
             
         #print (words)
@@ -148,7 +163,7 @@ class FeaturesF2:
            
         return max_b
    
-    def __POStypes_between_Entities(self,abstract,rel):
+    def __POStypes_between_Entities(self,abstract,rel,flag):
           # number of different POS types in between the entities
         
         delimeter=['.']
@@ -176,17 +191,23 @@ class FeaturesF2:
         while i>=0:
             if abstract.obj[i].value.lower()==abstract.obj[j].value.lower():
                 break
+            
             #stop when sentence ends
             if '.' in abstract.obj[i].value.lower():
                 break 
-            if abstract.obj[i].value.lower() not in self.stop_words:
+            #stop words removed
+            if flag == 1:
+                if abstract.obj[i].value.lower() not in self.stop_words:
+                    words.append(abstract.obj[i].value.lower())
+                    pos=tokens_pos[i][1]
+                    postags.append(pos)
+                  
+             #stop words not removed
+            if flag == 0:
                 words.append(abstract.obj[i].value.lower())
                 pos=tokens_pos[i][1]
                 postags.append(pos)
-            
-            #words.append(abstract.obj[i].value.lower())
-            #pos=tokens_pos[i][1]
-            #postags.append(pos)
+                
             i=i+1      
        
         #count the unique POS types
@@ -195,7 +216,7 @@ class FeaturesF2:
         
         return unique_POS_count 
     
-    def __POStypes_before_E1(self,abstract,rel):
+    def __POStypes_before_E1(self,abstract,rel,flag):
           #number of different POS types before E1
         
         delimeter=['.']
@@ -222,13 +243,19 @@ class FeaturesF2:
             #stop when sentence ends
             if '.' in abstract.obj[i].value.lower():
                 break 
-            if abstract.obj[i].value.lower() not in self.stop_words:
+             #stop words removed
+            if flag == 1:
+                if abstract.obj[i].value.lower() not in self.stop_words:
+                    words.append(abstract.obj[i].value.lower())
+                    pos=tokens_pos[i][1]
+                    postags.append(pos)
+                     
+             #stop words not removed
+            if flag == 0:
                 words.append(abstract.obj[i].value.lower())
                 pos=tokens_pos[i][1]
-                postags.append(pos) 
-            #words.append(abstract.obj[i].value.lower())
-            #pos=tokens_pos[i][1]
-            #postags.append(pos)
+                postags.append(pos)
+                 
             
             i=i-1      
        
@@ -238,7 +265,7 @@ class FeaturesF2:
          
         return unique_POS_count 
     
-    def __POStypes_after_E2(self,abstract,rel):
+    def __POStypes_after_E2(self,abstract,rel,flag):
           #number of different POS types after E2
         
         delimeter=['.']
@@ -265,13 +292,18 @@ class FeaturesF2:
             #stop when sentence ends
             if i == len(abstract.obj) or'.' == abstract.obj[i].value.lower() :
                 break 
-            if abstract.obj[i].value.lower() not in self.stop_words:
+             #stop words removed
+            if flag == 1:
+                if abstract.obj[i].value.lower() not in self.stop_words:
+                    words.append(abstract.obj[i].value.lower())
+                    pos=tokens_pos[i][1]
+                    postags.append(pos)
+                    
+             #stop words not removed
+            if flag == 0:
                 words.append(abstract.obj[i].value.lower())
                 pos=tokens_pos[i][1]
                 postags.append(pos) 
-            #words.append(abstract.obj[i].value.lower())
-            #pos=tokens_pos[i][1]
-            #postags.append(pos)
             
             i=i+1 
            
@@ -318,7 +350,7 @@ class FeaturesF2:
                 if abstract.tf_idf[abstract.obj[i].value.lower()]>0.02:
                   
                     tfidf.append(abstract.tf_idf[abstract.obj[i].value.lower()])
-                    words.append(i)
+                    words.appenget_abstractd(i)
              
             i=i+1      
          
@@ -420,31 +452,37 @@ class FeaturesF2:
         # Prepare stuff
         abstract = self.dataset.get_abstract(rel.abstract)
          
-        #first_word_after_E1=self.__first_word_after_E1(abstract,rel)
-        #X.append(  first_word_after_E1)
+        #first_word_after_E1=self.__first_word_after_E1(abstract,rel,0)
+        first_word_after_E1=self.__first_word_after_E1(abstract,rel,1)
+        X.append(  first_word_after_E1)
         
-        #first_word_before_E2=self.__first_word_before_E2(abstract,rel)
+        #first_word_before_E2=self.__first_word_before_E2(abstract,rel,0)
+        #first_word_before_E2=self.__first_word_before_E2(abstract,rel,1)
         #X.append(  first_word_before_E2)
         
-        #words_between_Entities=self.__words_between_Entities(abstract,rel)
+        #words_between_Entities=self.__words_between_Entities(abstract,rel,0)
+        #words_between_Entities=self.__words_between_Entities(abstract,rel,1)
         #X.append(  words_between_Entities)
         
-        POStypes_between_Entities=self.__POStypes_between_Entities(abstract,rel)
-        X.append(  POStypes_between_Entities)
+        #POStypes_between_Entities=self.__POStypes_between_Entities(abstract,rel,0)
+        #POStypes_between_Entities=self.__POStypes_between_Entities(abstract,rel,1)
+        #X.append(  POStypes_between_Entities)
         
-        POStypes_before_E1=self.__POStypes_before_E1(abstract,rel)
-        X.append(  POStypes_before_E1)
+        #POStypes_before_E1=self.__POStypes_before_E1(abstract,rel,0)
+        #POStypes_before_E1=self.__POStypes_before_E1(abstract,rel,1)
+        #X.append(  POStypes_before_E1)
         
-        POStypes_after_E2=self.__POStypes_after_E2(abstract,rel)
-        X.append(  POStypes_after_E2)
+        #POStypes_after_E2=self.__POStypes_after_E2(abstract,rel,0)
+        #POStypes_after_E2=self.__POStypes_after_E2(abstract,rel,1)
+        #X.append(  POStypes_after_E2)
         
-        POStype_highest_tfidf_between_entities=self.__POStype_highest_tfidf_between_entities(abstract,rel)
-        X.append(  POStype_highest_tfidf_between_entities)
+        #POStype_highest_tfidf_between_entities=self.__POStype_highest_tfidf_between_entities(abstract,rel)
+        #X.append(  POStype_highest_tfidf_between_entities)
         
-        POStype_highest_tfidf_before_E1=self.__POStype_highest_tfidf_before_E1(abstract,rel)
-        X.append(  POStype_highest_tfidf_before_E1)
+        #POStype_highest_tfidf_before_E1=self.__POStype_highest_tfidf_before_E1(abstract,rel)
+        #X.append(  POStype_highest_tfidf_before_E1)
         
-        POStype_highest_tfidf_after_E2=self.__POStype_highest_tfidf_after_E2(abstract,rel)
-        X.append(  POStype_highest_tfidf_after_E2)
+        #POStype_highest_tfidf_after_E2=self.__POStype_highest_tfidf_after_E2(abstract,rel)
+        #X.append(  POStype_highest_tfidf_after_E2)
        
         return X

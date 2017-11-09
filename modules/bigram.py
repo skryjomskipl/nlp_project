@@ -1,10 +1,22 @@
+from dataset import *
 import nltk.collocations
 import nltk.corpus
 import collections
 
+
 class Bigram:
+    dataset = None
+    utils = None
+
+    def __init__(self, utils):
+        self.utils = utils
+        self.prefix_keys = []
+        self.bigrams=[]
+    def set_dataset(self, dataset):
+        self.dataset = dataset
     
-    def get_abstract(self,text,word):
+   
+    def calc_bigram(self, test_dataset = False):
         
         for abstr in self.dataset.abstract:
             #print("Abstract---->", abstr.text)
@@ -12,18 +24,22 @@ class Bigram:
             bgm    = nltk.collocations.BigramAssocMeasures()
             finder = nltk.collocations.BigramCollocationFinder.from_words(abstr.text.lower().split())
             scored = finder.score_ngrams( bgm.likelihood_ratio  )
-            #print (scored)
-        
-         # Group bigrams by first word in bigram.                                        
-        prefix_keys = collections.defaultdict(list)
+            # Group bigrams by first word in bigram.                                        
+        self.prefix_keys = collections.defaultdict(list)
         for key, scores in scored:
-            prefix_keys[key[0]].append((key[1], scores))
-
+            self.prefix_keys[key[0]].append((key[1], scores))
+        
+       
+        return self.prefix_keys
+    
+    def get_bigram(self, word):
+         
         # Sort keyed bigrams by strongest association.                                  
-        for key in prefix_keys:
-            prefix_keys[key].sort(key = lambda x: -x[1])
-           
-        val = prefix_keys[word][:1]
+        print ("array  ",self.prefix_keys)
+        
+        for key in self.prefix_keys:
+            self.prefix_keys[key].sort(key = lambda x: -x[1])
+        
+        val = self.prefix_keys[word][:1]
        
         return val
-     

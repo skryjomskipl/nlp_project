@@ -1,5 +1,5 @@
 # Written by: Przemyslaw Skryjomski
-
+# Precision, recall evaluation metrics added - Samantha
 # Subtask 1.1 - Split 60/40 (new)
 #
 
@@ -16,7 +16,7 @@ train_rel = 'data/subtask11/new/1.1.relations.txt'
 # Prepare utilities
 utils = Utils()
 features = FeatureExtraction(utils)
-
+bigram = Bigram(utils)
 train = Dataset(train_data, train_rel)
 train.read(utils)
 
@@ -28,10 +28,14 @@ train, test = utils.do_split(train, 0.6, seed = 0)
 
 # Create training set
 features.set_dataset(train)
+bigram.set_dataset(train)
+b=bigram.calc_bigram()
 train_X, train_Y = features.prepare_data(features_state)
 
 # Prepare vectors
 features.set_dataset(test)
+bigram.set_dataset(test)
+b=bigram.calc_bigram()
 test_X, test_Y = features.prepare_data(features_state, test_dataset = True)
 
 # Classify
@@ -63,3 +67,5 @@ test_key_Y = features.get_dataset_key()
 print("\n=> Metrics")
 print("Accuracy:          ", round(utils.get_accuracy(test_key_Y, test_Y), 2), "%", sep = '')
 print("F-Measure:         ", round(utils.get_fmeasure(test_key_Y, test_Y), 2), "%", sep = '')
+print("Precision:          ", round(utils.get_precision(test_key_Y, test_Y), 2), "%", sep = '')
+print("Recall:         ", round(utils.get_recall(test_key_Y, test_Y), 2), "%", sep = '')
