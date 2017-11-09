@@ -6,6 +6,7 @@
 from dataset import *
 from common import *
 from modules import *
+from modules.bigram import Bigram
 import code
 import copy
 import random
@@ -28,12 +29,16 @@ train, test = utils.do_split(train, 0.6, seed = 0)
 
 # Create training set
 features.set_dataset(train)
+tfIdfCalculator.set_dataset(train)
+s=tfIdfCalculator.calc_ifidf_data()
 bigram.set_dataset(train)
 b=bigram.calc_bigram()
 train_X, train_Y = features.prepare_data(features_state)
 
 # Prepare vectors
 features.set_dataset(test)
+tfIdfCalculator.set_dataset(test)
+s=tfIdfCalculator.calc_ifidf_data()
 bigram.set_dataset(test)
 b=bigram.calc_bigram()
 test_X, test_Y = features.prepare_data(features_state, test_dataset = True)
