@@ -100,7 +100,7 @@ class FeaturesF2:
          
       
         #calculate bigram
-        bigram = Bigram.get_abstract(self,abstract,ps.stem(word))
+        bigram = Bigram.get_abstract(ps.stem(word))
         if bigram:
             for x in bigram:
                 bb=x[1]
@@ -146,7 +146,7 @@ class FeaturesF2:
             
         #print (words)
         for x in words:
-            bigram = Bigram.get_abstract(self,abstract,x)
+            bigram = Bigram.get_abstract(x)
             if bigram:
                 for x in bigram:
                     bb=x[1]
