@@ -24,7 +24,6 @@ class FeatureCollection:
         'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so',
         'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now']
 
-        
     def __feature (self, abstract, rel):
         #word before E1 with lematization        
         ps = PorterStemmer()
@@ -64,7 +63,7 @@ class FeatureCollection:
         if len(word_list)!=1:
             return 0
         
-    def __noOf_words_beforeE1(self,abstract,rel):
+    def __noOf_words_beforeE1(self,abstract,rel,flag):
          #Number of words before E1 in the full sentance. (Feature2)
             #Calc if-idf val
         noOfWords=0;
@@ -82,10 +81,11 @@ class FeatureCollection:
                 str_id=i;
                 break 
             if  abstract.obj[i].value.lower() in abstract.tf_idf.keys():
-                if abstract.tf_idf[abstract.obj[i].value.lower()]<0.02:
-                    stop_word_count+=1;
-                    i=i-1
-                    continue
+                if flag==1:
+                    if abstract.tf_idf[abstract.obj[i].value.lower()]<0.02:
+                        stop_word_count+=1;
+                        i=i-1
+                        continue
             if (abstract.obj[i].value.lower()) in self.stop_words:
                 stop_word_count+=1;
             
@@ -94,19 +94,22 @@ class FeatureCollection:
         return (min(a)-str_id)-stop_word_count  
     
     
-    def __noOf_words_afterE2(self,abstract,rel):
+    def __noOf_words_afterE2(self,abstract,rel,flag):
          #Number of words after E2 in the full sentance.(Feature3)
+        #print("rel>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         noOfWords=0;
         delimeter=['.']
         ps = PorterStemmer()
         stop_word_count=0
         
         b = abstract.get_entity_ids(rel.b) 
-        
-        i=max(b);
-        str_id=max(b);
-        while i<=len(abstract.obj):#??
-            
+        #print("rel=",abstract.id)
+        #print("rel.b=",rel.b)
+        i=max(b)+1;
+        str_id=max(b)+1;
+        #print("i=",i)
+        while i<len(abstract.obj):#??
+            #print("abstract.obj[i].value=",abstract.obj[i].value)
             if abstract.obj[i].value=='.':
                 str_id=i-1;
                 break 
@@ -114,14 +117,16 @@ class FeatureCollection:
                 str_id=i;
                 break
             if  abstract.obj[i].value.lower() in abstract.tf_idf.keys():
-                if abstract.tf_idf[abstract.obj[i].value.lower()]<0.02:
-                    stop_word_count+=1;
-                    i=i+1
-                    continue
+                if flag==1:
+                    if abstract.tf_idf[abstract.obj[i].value.lower()]<0.02:
+                        stop_word_count+=1;
+                        i=i+1
+                        continue
             if (abstract.obj[i].value.lower()) in self.stop_words or abstract.obj[i].value in [',',';']:
                 stop_word_count+=1;                  
             i=i+1
-            str_id=i   
+            str_id=i 
+        #print("value= ",(str_id-max(b))-stop_word_count)
         return (str_id-max(b))-stop_word_count
     
     
@@ -141,11 +146,9 @@ class FeatureCollection:
                 if abstract.obj[i].value=='.':                    
                     break 
                 if ps.stem(abstract.obj[i].value.lower()) not in self.stop_words and abstract.obj[i].value not in [',','-',';']: #add the list
-                    #print("word -=====",abstract.obj[i].value)
+                    
                     word=ps.stem(abstract.obj[i].value.lower())
                     word=int.from_bytes(word.encode(), 'little')
-                    #if  abstract.obj[i].value in abstract.tf_idf.keys():
-                        #print(abstract.tf_idf[abstract.obj[i].value])
                     break
                 else:
                     i=i-1
@@ -158,12 +161,11 @@ class FeatureCollection:
         b = abstract.get_word_beforeE1(rel.b) 
         ps = PorterStemmer()
         
-        i=max(b)+1
-        
         word=0
-        #print("-> ",abstract.obj[i].value)
-        
-        while i>=0:
+        i=max(b)+1;
+        str_id=max(b)+1;
+        #print("i=",i)
+        while i<len(abstract.obj):#
             if abstract.obj[i].value :
                 if abstract.obj[i].value=='.':                    
                     break 
@@ -176,7 +178,7 @@ class FeatureCollection:
        
         return word  
     
-    def __POS_beforeE1(self, abstract, rel):
+    def __POS_beforeE1(self, abstract, rel,flag):
         # checking pos tag of words before E1 , window size=2
         abstract = self.dataset.get_abstract(rel.abstract)   
         ps = PorterStemmer()
@@ -205,9 +207,11 @@ class FeatureCollection:
                 word_count=word_count+1
                 break 
             if  abstract.obj[i].value.lower() in abstract.tf_idf.keys():
-                if abstract.tf_idf[abstract.obj[i].value.lower()]<0.02:
-                    i=i-1
-                    continue    
+                if flag==1:
+                    if abstract.tf_idf[abstract.obj[i].value.lower()]<0.02:
+                        stop_word_count+=1;
+                        i=i-1
+                        continue    
             word_list.append(i);            
             word_count=word_count+1
             if word_count==2:
@@ -228,8 +232,9 @@ class FeatureCollection:
        
         return out
     
-    def __POS_AfterE2(self, abstract, rel):
+    def __POS_AfterE2(self, abstract, rel,flag):
         # checking pos tag of words before E1 , window size=2
+        
         abstract = self.dataset.get_abstract(rel.abstract)   
         ps = PorterStemmer()
         tokens = []
@@ -246,43 +251,55 @@ class FeatureCollection:
         
         b = abstract.get_entity_ids(rel.b) 
         
-        word_list=[];
-        word_count=0;
-        i=max(b)+1;
-        while i>=0:
-            if abstract.obj[i].value=='.':
-                i=0
+        word_list=[]
+        word_count=0
+        i=max(b)+1
+        while i<len(abstract.obj):#
+            #print("bstract.obj[i].value=",abstract.obj[i].value)
+            if abstract.obj[i].value=='.':                
                 break 
-            if '.' in abstract.obj[i].value:
-                    
+            if '.' in abstract.obj[i].value:                    
                 word_list.append(i)                
                 word_count=word_count+1
+                #print("added")
                 break  
             if (abstract.obj[i].value.lower()) not in self.stop_words and abstract.obj[i].value not in [',','-',';']: #add the list
-                if  abstract.obj[i].value.lower() in abstract.tf_idf.keys():
-                    if abstract.tf_idf[abstract.obj[i].value.lower()]<0.02:
-                        i=i+1
-                        continue    
+                if flag==1:
+                    if  abstract.obj[i].value.lower() in abstract.tf_idf.keys():
+                        if abstract.tf_idf[abstract.obj[i].value.lower()]<0.02:
+                            stop_word_count+=1;
+                            i=i+1
+                            continue    
                 word_list.append(i)                
                 word_count=word_count+1
+                #print("added")
             if word_count==2:
                 break
                 
             i=i+1
         #self.utils.get_feature_from_pos_tagger(tokens_pos[word_list[0]][1])
-        if i!=0:            
+        #print("loop ok")
+        #print("len(word_list)=",len(word_list))
+        if len(word_list)!=0:
+            
+            
             if len(word_list)==2:
+                
                 out.append(self.utils.get_feature_from_pos_tagger(tokens_pos[word_list[0]][1]))
                 out.append(self.utils.get_feature_from_pos_tagger(tokens_pos[word_list[1]][1]))
+                
             if len(word_list)==1:
+                
                 out.append(self.utils.get_feature_from_pos_tagger(tokens_pos[word_list[0]][1]))
                 out.append(0)
-        if i==0:
+                
+        if len(word_list)==0:
             out.append(0)
             out.append(0)
+            
         return out
                 
-    def __POS_AfterE1(self, abstract, rel):
+    def __POS_AfterE1(self, abstract, rel,flag):
         # checking pos tag of words before E1 , window size=2
         abstract = self.dataset.get_abstract(rel.abstract)   
         ps = PorterStemmer()
@@ -298,7 +315,7 @@ class FeatureCollection:
         a = abstract.get_entity_ids(rel.a) 
        
         i=max(a)+1;
-        while i>=0:
+        while i<len(abstract.obj):
             
             if abstract.obj[i].value :
                 if abstract.obj[i].value=='.':                    
@@ -307,6 +324,11 @@ class FeatureCollection:
                     wordIndex=i 
                     break  
                 if abstract.obj[i].value.lower() not in self.stop_words and abstract.obj[i].value not in [',','-',';']: #add the list                
+                    if flag==1:
+                        if  abstract.obj[i].value.lower() in abstract.tf_idf.keys():
+                            if abstract.tf_idf[abstract.obj[i].value.lower()]<0.02:                        
+                                i=i+1
+                                continue 
                     wordIndex=i 
                     break                  
                 i=i+1
@@ -315,7 +337,7 @@ class FeatureCollection:
             pos=(self.utils.get_feature_from_pos_tagger(tokens_pos[wordIndex][1]))
         return pos
     
-    def __POS_BeforeE2(self, abstract, rel):
+    def __POS_BeforeE2(self, abstract, rel,flag):
         # checking pos tag of words before E1 , window size=2
         abstract = self.dataset.get_abstract(rel.abstract)   
         ps = PorterStemmer()
@@ -331,7 +353,7 @@ class FeatureCollection:
         a = abstract.get_entity_ids(rel.a) 
        
         i=min(b)-1;
-        while i>=0:
+        while i<len(abstract.obj):
             
             if abstract.obj[i].value :
                 if abstract.obj[i].value=='.':                    
@@ -344,10 +366,11 @@ class FeatureCollection:
                     wordIndex=i 
                     break  
                 if abstract.obj[i].value.lower() not in self.stop_words and abstract.obj[i].value not in [',','-',';']: #add the list
-                    #if  abstract.obj[i].value in abstract.tf_idf.keys():
-                        #if abstract.tf_idf[abstract.obj[i].value]<0.02:
-                            #i=i-1
-                            #continue 
+                    if flag==1:
+                        if  abstract.obj[i].value.lower() in abstract.tf_idf.keys():
+                            if abstract.tf_idf[abstract.obj[i].value.lower()]<0.02:                        
+                                i=i-1
+                                continue
                     wordIndex=i 
                     break                  
                 i=i-1
@@ -818,56 +841,70 @@ class FeatureCollection:
         abstract = self.dataset.get_abstract(rel.abstract)
         
        
-        out=self.__POS_beforeE1(abstract,rel) 
-        noOfWordsBeforeE1=self.__noOf_words_beforeE1(abstract,rel)
-        #X.append(noOfWordsBeforeE1)
-        noOfWordsAfterE2=self.__noOf_words_afterE2(abstract,rel)
-        #X.append(noOfWordsAfterE2)        
+        #out=self.__POS_beforeE1(abstract,rel) 
+        
+        noOfWordsBeforeE1=self.__noOf_words_beforeE1(abstract,rel,0)
+        X.append(noOfWordsBeforeE1)
+        noOfWordsBeforeE1=self.__noOf_words_beforeE1(abstract,rel,1)
+        X.append(noOfWordsBeforeE1)
+        noOfWordsAfterE2=self.__noOf_words_afterE2(abstract,rel,0)
+        X.append(noOfWordsAfterE2) 
+        noOfWordsAfterE2=self.__noOf_words_afterE2(abstract,rel,1)
+        X.append(noOfWordsAfterE2)
         wordBeforeE1=self.__wordBeforE1(abstract,rel)
-        #X.append(wordBeforeE1) 
+        X.append(wordBeforeE1) 
         wordAfterE2=self.__wordAfterE2(abstract,rel)
-        #X.append(wordAfterE2) 
-        posAfterE2=self.__POS_AfterE2(abstract,rel)
-        #X.append(posAfterE2[0])
-        #X.append(posAfterE2[1])
-        posBeforeE1=self.__POS_beforeE1(abstract,rel)
-        #X.append(posBeforeE1[0])
-        #X.append(posBeforeE1[1])
-        posAfterE1=self.__POS_AfterE1(abstract,rel)
+        X.append(wordAfterE2) 
+        posAfterE2=self.__POS_AfterE2(abstract,rel,0)
+        X.append(posAfterE2[0])
+        X.append(posAfterE2[1])
+        posAfterE2=self.__POS_AfterE2(abstract,rel,1)
+        X.append(posAfterE2[0])
+        X.append(posAfterE2[1])
+        posBeforeE1=self.__POS_beforeE1(abstract,rel,0)
+        X.append(posBeforeE1[0])
+        X.append(posBeforeE1[1])
+        posBeforeE1=self.__POS_beforeE1(abstract,rel,1)
+        X.append(posBeforeE1[0])
+        X.append(posBeforeE1[1])
+        posAfterE1=self.__POS_AfterE1(abstract,rel,0)
         X.append(posAfterE1)
-        posBeforeE2=self.__POS_BeforeE2(abstract,rel)        
+       
+        posAfterE1=self.__POS_AfterE1(abstract,rel,1)
+        X.append(posAfterE1)
+        posBeforeE2=self.__POS_BeforeE2(abstract,rel,0)        
+        X.append(posBeforeE2)
+        posBeforeE2=self.__POS_BeforeE2(abstract,rel,1)        
         X.append(posBeforeE2)
         
         #Shamek
         
-        a = abstract.get_entity_ids(rel.a)
-        b = abstract.get_entity_ids(rel.b)
+        abstract = self.dataset.get_abstract(rel.abstract)
+        #a = abstract.get_entity_ids(rel.a)
+        #b = abstract.get_entity_ids(rel.b)
 
-        # Feature 1 - Word distance between tags
-        distance = min(b)-max(a)
+        # Feature 1 - Word distance between tags after lowercasing and stopwords removal
+        #objs_between_entities = abstract.obj[max(a):min(b)]
+        #objs_processed = [obj for obj in objs_between_entities if not obj.value.lower() in self.utils.get_stopwords()]
+
+        #distance = len(objs_processed)
         #X.append(distance)
 
         # Feature 2 - POS tag of the last word in the entity sequence
-        tokens = []
-
-        for obj in abstract.obj:
-            tokens.append(obj.value)
+        #a_id = max(a)
+        #b_id = max(b)
         
-        tokens_pos = self.utils.get_pos_tags(tokens)
+        #a_pos = abstract.pos_tags[a_id][1]
+        #b_pos = abstract.pos_tags[b_id][1]
 
-        a_id = max(a)
-        b_id = max(b)
-        
-        a_pos = tokens_pos[a_id][1]
-        b_pos = tokens_pos[b_id][1]
-
-        # Include POS tags into a feature vector
         #X.append(self.utils.get_feature_from_pos_tagger(a_pos))
         #X.append(self.utils.get_feature_from_pos_tagger(b_pos))
 
+        # NOTE: Taking into account 'reverse' in any way in this task seems to hurt performance as of now.
+        #       Maybe later we can do something with this...
 
         # Feature 3 - Rule based extraction for boosting prediction of the less represented classes
-        objects, a_id, b_id = self.__get_sentence_objects(abstract, min(a), min(b))
+        #objects, a_id, b_id = self.__get_sentence_objects(abstract, min(a), min(b))
         #X.append(self.__get_feature_from_rule(self.utils, objects))
         
         
@@ -882,22 +919,22 @@ class FeatureCollection:
         #words_between_Entities=self.__words_between_Entities(abstract,rel)
         #X.append(  words_between_Entities)
         
-        POStypes_between_Entities=self.__POStypes_between_Entities(abstract,rel)
+        #POStypes_between_Entities=self.__POStypes_between_Entities(abstract,rel)
         #X.append(  POStypes_between_Entities)
         
-        POStypes_before_E1=self.__POStypes_before_E1(abstract,rel)
+        #POStypes_before_E1=self.__POStypes_before_E1(abstract,rel)
         #X.append(  POStypes_before_E1)
         
-        POStypes_after_E2=self.__POStypes_after_E2(abstract,rel)
+        #POStypes_after_E2=self.__POStypes_after_E2(abstract,rel)
         #X.append(  POStypes_after_E2)
         
-        POStype_highest_tfidf_between_entities=self.__POStype_highest_tfidf_between_entities(abstract,rel)
+        #POStype_highest_tfidf_between_entities=self.__POStype_highest_tfidf_between_entities(abstract,rel)
         #X.append(  POStype_highest_tfidf_between_entities)
         
-        POStype_highest_tfidf_before_E1=self.__POStype_highest_tfidf_before_E1(abstract,rel)
+        #POStype_highest_tfidf_before_E1=self.__POStype_highest_tfidf_before_E1(abstract,rel)
         #X.append(  POStype_highest_tfidf_before_E1)
         
-        POStype_highest_tfidf_after_E2=self.__POStype_highest_tfidf_after_E2(abstract,rel)
+        #POStype_highest_tfidf_after_E2=self.__POStype_highest_tfidf_after_E2(abstract,rel)
         #X.append(  POStype_highest_tfidf_after_E2)
         
         return X

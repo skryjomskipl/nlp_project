@@ -453,8 +453,8 @@ class FeaturesF2:
         abstract = self.dataset.get_abstract(rel.abstract)
          
         #first_word_after_E1=self.__first_word_after_E1(abstract,rel,0)
-        first_word_after_E1=self.__first_word_after_E1(abstract,rel,1)
-        X.append(  first_word_after_E1)
+        #first_word_after_E1=self.__first_word_after_E1(abstract,rel,1)
+        #X.append(  first_word_after_E1)
         
         #first_word_before_E2=self.__first_word_before_E2(abstract,rel,0)
         #first_word_before_E2=self.__first_word_before_E2(abstract,rel,1)
@@ -464,25 +464,28 @@ class FeaturesF2:
         #words_between_Entities=self.__words_between_Entities(abstract,rel,1)
         #X.append(  words_between_Entities)
         
-        #POStypes_between_Entities=self.__POStypes_between_Entities(abstract,rel,0)
-        #POStypes_between_Entities=self.__POStypes_between_Entities(abstract,rel,1)
-        #X.append(  POStypes_between_Entities)
+        POStypes_between_Entities=self.__POStypes_between_Entities(abstract,rel,0)
+        X.append(  POStypes_between_Entities)
+        POStypes_between_Entities=self.__POStypes_between_Entities(abstract,rel,1)
+        X.append(  POStypes_between_Entities)
         
-        #POStypes_before_E1=self.__POStypes_before_E1(abstract,rel,0)
-        #POStypes_before_E1=self.__POStypes_before_E1(abstract,rel,1)
-        #X.append(  POStypes_before_E1)
+        POStypes_before_E1=self.__POStypes_before_E1(abstract,rel,0)
+        X.append(  POStypes_before_E1)
+        POStypes_before_E1=self.__POStypes_before_E1(abstract,rel,1)
+        X.append(  POStypes_before_E1)
         
-        #POStypes_after_E2=self.__POStypes_after_E2(abstract,rel,0)
-        #POStypes_after_E2=self.__POStypes_after_E2(abstract,rel,1)
-        #X.append(  POStypes_after_E2)
+        POStypes_after_E2=self.__POStypes_after_E2(abstract,rel,0)
+        X.append(  POStypes_after_E2)
+        POStypes_after_E2=self.__POStypes_after_E2(abstract,rel,1)
+        X.append(  POStypes_after_E2)
         
-        #POStype_highest_tfidf_between_entities=self.__POStype_highest_tfidf_between_entities(abstract,rel)
-        #X.append(  POStype_highest_tfidf_between_entities)
+        POStype_highest_tfidf_between_entities=self.__POStype_highest_tfidf_between_entities(abstract,rel)
+        X.append(  POStype_highest_tfidf_between_entities)
         
-        #POStype_highest_tfidf_before_E1=self.__POStype_highest_tfidf_before_E1(abstract,rel)
-        #X.append(  POStype_highest_tfidf_before_E1)
+        POStype_highest_tfidf_before_E1=self.__POStype_highest_tfidf_before_E1(abstract,rel)
+        X.append(  POStype_highest_tfidf_before_E1)
         
-        #POStype_highest_tfidf_after_E2=self.__POStype_highest_tfidf_after_E2(abstract,rel)
-        #X.append(  POStype_highest_tfidf_after_E2)
+        POStype_highest_tfidf_after_E2=self.__POStype_highest_tfidf_after_E2(abstract,rel)
+        X.append(  POStype_highest_tfidf_after_E2)
        
         return X

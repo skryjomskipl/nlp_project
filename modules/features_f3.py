@@ -1,5 +1,5 @@
 # Features #3
-# This file is create by Chathuri and Samantha , 5 features were implemented.  
+# This file is create by Chathuri 
 import nltk
 from nltk.stem import PorterStemmer
 from nltk.tokenize import sent_tokenize, word_tokenize
@@ -25,7 +25,6 @@ class FeaturesF3:
         'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so',
         'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now']
 
-        
     def __feature (self, abstract, rel):
         #word before E1 with lematization        
         ps = PorterStemmer()
@@ -65,7 +64,7 @@ class FeaturesF3:
         if len(word_list)!=1:
             return 0
         
-    def __noOf_words_beforeE1(self,abstract,rel):
+    def __noOf_words_beforeE1(self,abstract,rel,flag):
          #Number of words before E1 in the full sentance. (Feature2)
             #Calc if-idf val
         noOfWords=0;
@@ -82,11 +81,12 @@ class FeaturesF3:
             if '.' in abstract.obj[i].value:                
                 str_id=i;
                 break 
-            #if  abstract.obj[i].value.lower() in abstract.tf_idf.keys():
-                #if abstract.tf_idf[abstract.obj[i].value.lower()]<0.02:
-                    #stop_word_count+=1;
-                    #i=i-1
-                    #continue
+            if  abstract.obj[i].value.lower() in abstract.tf_idf.keys():
+                if flag==1:
+                    if abstract.tf_idf[abstract.obj[i].value.lower()]<0.02:
+                        stop_word_count+=1;
+                        i=i-1
+                        continue
             if (abstract.obj[i].value.lower()) in self.stop_words:
                 stop_word_count+=1;
             
@@ -95,7 +95,7 @@ class FeaturesF3:
         return (min(a)-str_id)-stop_word_count  
     
     
-    def __noOf_words_afterE2(self,abstract,rel):
+    def __noOf_words_afterE2(self,abstract,rel,flag):
          #Number of words after E2 in the full sentance.(Feature3)
         #print("rel>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         noOfWords=0;
@@ -118,10 +118,11 @@ class FeaturesF3:
                 str_id=i;
                 break
             if  abstract.obj[i].value.lower() in abstract.tf_idf.keys():
-                if abstract.tf_idf[abstract.obj[i].value.lower()]<0.02:
-                    stop_word_count+=1;
-                    i=i+1
-                    continue
+                if flag==1:
+                    if abstract.tf_idf[abstract.obj[i].value.lower()]<0.02:
+                        stop_word_count+=1;
+                        i=i+1
+                        continue
             if (abstract.obj[i].value.lower()) in self.stop_words or abstract.obj[i].value in [',',';']:
                 stop_word_count+=1;                  
             i=i+1
@@ -146,11 +147,9 @@ class FeaturesF3:
                 if abstract.obj[i].value=='.':                    
                     break 
                 if ps.stem(abstract.obj[i].value.lower()) not in self.stop_words and abstract.obj[i].value not in [',','-',';']: #add the list
-                    #print("word -=====",abstract.obj[i].value)
+                    
                     word=ps.stem(abstract.obj[i].value.lower())
                     word=int.from_bytes(word.encode(), 'little')
-                    #if  abstract.obj[i].value in abstract.tf_idf.keys():
-                        #print(abstract.tf_idf[abstract.obj[i].value])
                     break
                 else:
                     i=i-1
@@ -180,7 +179,7 @@ class FeaturesF3:
        
         return word  
     
-    def __POS_beforeE1(self, abstract, rel):
+    def __POS_beforeE1(self, abstract, rel,flag):
         # checking pos tag of words before E1 , window size=2
         abstract = self.dataset.get_abstract(rel.abstract)   
         ps = PorterStemmer()
@@ -209,9 +208,11 @@ class FeaturesF3:
                 word_count=word_count+1
                 break 
             if  abstract.obj[i].value.lower() in abstract.tf_idf.keys():
-                if abstract.tf_idf[abstract.obj[i].value.lower()]<0.02:
-                    i=i-1
-                    continue    
+                if flag==1:
+                    if abstract.tf_idf[abstract.obj[i].value.lower()]<0.02:
+                        stop_word_count+=1;
+                        i=i-1
+                        continue    
             word_list.append(i);            
             word_count=word_count+1
             if word_count==2:
@@ -232,7 +233,7 @@ class FeaturesF3:
        
         return out
     
-    def __POS_AfterE2(self, abstract, rel):
+    def __POS_AfterE2(self, abstract, rel,flag):
         # checking pos tag of words before E1 , window size=2
         
         abstract = self.dataset.get_abstract(rel.abstract)   
@@ -264,11 +265,12 @@ class FeaturesF3:
                 #print("added")
                 break  
             if (abstract.obj[i].value.lower()) not in self.stop_words and abstract.obj[i].value not in [',','-',';']: #add the list
-                if  abstract.obj[i].value.lower() in abstract.tf_idf.keys():
-                    if abstract.tf_idf[abstract.obj[i].value.lower()]<0.02:
-                        i=i+1
-                        
-                        continue    
+                if flag==1:
+                    if  abstract.obj[i].value.lower() in abstract.tf_idf.keys():
+                        if abstract.tf_idf[abstract.obj[i].value.lower()]<0.02:
+                            stop_word_count+=1;
+                            i=i+1
+                            continue    
                 word_list.append(i)                
                 word_count=word_count+1
                 #print("added")
@@ -298,7 +300,7 @@ class FeaturesF3:
             
         return out
                 
-    def __POS_AfterE1(self, abstract, rel):
+    def __POS_AfterE1(self, abstract, rel,flag):
         # checking pos tag of words before E1 , window size=2
         abstract = self.dataset.get_abstract(rel.abstract)   
         ps = PorterStemmer()
@@ -323,6 +325,11 @@ class FeaturesF3:
                     wordIndex=i 
                     break  
                 if abstract.obj[i].value.lower() not in self.stop_words and abstract.obj[i].value not in [',','-',';']: #add the list                
+                    if flag==1:
+                        if  abstract.obj[i].value.lower() in abstract.tf_idf.keys():
+                            if abstract.tf_idf[abstract.obj[i].value.lower()]<0.02:                        
+                                i=i+1
+                                continue 
                     wordIndex=i 
                     break                  
                 i=i+1
@@ -331,7 +338,7 @@ class FeaturesF3:
             pos=(self.utils.get_feature_from_pos_tagger(tokens_pos[wordIndex][1]))
         return pos
     
-    def __POS_BeforeE2(self, abstract, rel):
+    def __POS_BeforeE2(self, abstract, rel,flag):
         # checking pos tag of words before E1 , window size=2
         abstract = self.dataset.get_abstract(rel.abstract)   
         ps = PorterStemmer()
@@ -360,10 +367,11 @@ class FeaturesF3:
                     wordIndex=i 
                     break  
                 if abstract.obj[i].value.lower() not in self.stop_words and abstract.obj[i].value not in [',','-',';']: #add the list
-                    #if  abstract.obj[i].value in abstract.tf_idf.keys():
-                        #if abstract.tf_idf[abstract.obj[i].value]<0.02:
-                            #i=i-1
-                            #continue 
+                    if flag==1:
+                        if  abstract.obj[i].value.lower() in abstract.tf_idf.keys():
+                            if abstract.tf_idf[abstract.obj[i].value.lower()]<0.02:                        
+                                i=i-1
+                                continue
                     wordIndex=i 
                     break                  
                 i=i-1
@@ -378,24 +386,40 @@ class FeaturesF3:
         abstract = self.dataset.get_abstract(rel.abstract)
         
        
-        out=self.__POS_beforeE1(abstract,rel) 
-        #noOfWordsBeforeE1=self.__noOf_words_beforeE1(abstract,rel)
-        #X.append(noOfWordsBeforeE1)
-        #noOfWordsAfterE2=self.__noOf_words_afterE2(abstract,rel)
-        #X.append(noOfWordsAfterE2)        
-        #wordBeforeE1=self.__wordBeforE1(abstract,rel)
-        #X.append(wordBeforeE1) 
-        #wordAfterE2=self.__wordAfterE2(abstract,rel)
-        #X.append(wordAfterE2) 
-        #posAfterE2=self.__POS_AfterE2(abstract,rel)
-        #X.append(posAfterE2[0])
-        #X.append(posAfterE2[1])
-        #posBeforeE1=self.__POS_beforeE1(abstract,rel)
-        #X.append(posBeforeE1[0])
-        #X.append(posBeforeE1[1])
-        posAfterE1=self.__POS_AfterE1(abstract,rel)
+        #out=self.__POS_beforeE1(abstract,rel) 
+        """
+        noOfWordsBeforeE1=self.__noOf_words_beforeE1(abstract,rel,0)
+        X.append(noOfWordsBeforeE1)
+        noOfWordsBeforeE1=self.__noOf_words_beforeE1(abstract,rel,1)
+        X.append(noOfWordsBeforeE1)
+        noOfWordsAfterE2=self.__noOf_words_afterE2(abstract,rel,0)
+        X.append(noOfWordsAfterE2) 
+        noOfWordsAfterE2=self.__noOf_words_afterE2(abstract,rel,1)
+        X.append(noOfWordsAfterE2)
+        wordBeforeE1=self.__wordBeforE1(abstract,rel)
+        X.append(wordBeforeE1) 
+        wordAfterE2=self.__wordAfterE2(abstract,rel)
+        X.append(wordAfterE2) 
+        posAfterE2=self.__POS_AfterE2(abstract,rel,0)
+        X.append(posAfterE2[0])
+        X.append(posAfterE2[1])
+        posAfterE2=self.__POS_AfterE2(abstract,rel,1)
+        X.append(posAfterE2[0])
+        X.append(posAfterE2[1])
+        posBeforeE1=self.__POS_beforeE1(abstract,rel,0)
+        X.append(posBeforeE1[0])
+        X.append(posBeforeE1[1])
+        posBeforeE1=self.__POS_beforeE1(abstract,rel,1)
+        X.append(posBeforeE1[0])
+        X.append(posBeforeE1[1])
+        posAfterE1=self.__POS_AfterE1(abstract,rel,0)
         X.append(posAfterE1)
-        posBeforeE2=self.__POS_BeforeE2(abstract,rel)        
+        """
+        posAfterE1=self.__POS_AfterE1(abstract,rel,1)
+        X.append(posAfterE1)
+        posBeforeE2=self.__POS_BeforeE2(abstract,rel,0)        
+        X.append(posBeforeE2)
+        posBeforeE2=self.__POS_BeforeE2(abstract,rel,1)        
         X.append(posBeforeE2)
         
         #choose posAfterE1 posBeforeE2
