@@ -10,11 +10,13 @@ class Abstract:
     text = ''
     pos_tags = None
     tf_idf = None
+    entities = None
 
     def __init__(self, id):
         """ctor"""
         self.id = id
         self.obj = []
+        self.entities = []
 
     def set_title(self, title):
         """Sets title"""
@@ -53,7 +55,6 @@ class Abstract:
 
         return a
 
-
     def append_object(self, obj):
         """Appends object, returns False if one already exist"""
         self.obj.append(obj)
@@ -76,6 +77,31 @@ class Abstract:
             tokens.append(obj.value)
         
         self.pos_tags = utils.get_pos_tags(tokens)
+
+        # Store only entities with their corresponding ID
+        entity_ids = []
+
+        for obj in self.obj:
+            if obj.id != None and obj.id not in entity_ids:
+                entity_ids.append(obj.id)
+
+        for entity_id in entity_ids:
+            entity_list = []
+
+            # Store name of entity
+            entity_list.append(self.id + '.' + entity_id)
+
+            # Store keywords that belongs to such entity
+            ids = self.get_entity_ids(entity_id)
+            tmp = []
+
+            for i in ids:
+                tmp.append(self.obj[i].value)
+
+            entity_list.append(tmp)
+
+            # Store entity in a list of entities
+            self.entities.append(entity_list)
     
     def get_word_beforeE1(self, id):
         """Return the first word before the first entity"""

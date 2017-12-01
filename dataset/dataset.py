@@ -53,6 +53,10 @@ class Dataset:
         root = fp.getroot()
 
         for child in root:
+            if len(child) == 0:
+                print('WARNING: Encountered empty tag \'', child.tag, '\'.', sep = '')
+                continue
+            
             if child.tag != 'text':
                 print('Expected child tag \'text\', got \'', child.tag, '\'.', sep = '')
                 return False
@@ -129,7 +133,7 @@ class Dataset:
             self.relation.append(rel)
 
             #print(rel.type, ' ', rel.abstract, ' ', rel.a, ' ', rel.b, ' ', rel.reverse, sep = '')
-
+        
         return True
 
     def read(self, utils):
