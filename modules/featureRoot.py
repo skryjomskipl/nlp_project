@@ -1,4 +1,5 @@
 # Written by: Chathuri
+#feeding the result for feature selection
 from dataset import *
 import math
 from textblob import TextBlob as tb
@@ -46,21 +47,12 @@ class FeatureRoot:
         bloblist=[]
         # Prepare features
         fc = None
-        
-
-        
         fc = FeatureCollection(self.utils, self.dataset)
-        
-        
-
-        
-        
+        #for each relation run for all the features and send data to classifier later in feature selection file        
         for rel in self.dataset.relation:
-            #print("rel =",rel.a)
-            # Extract features
-            features = []
-
             
+            # Extract features
+            features = []            
             features += fc.get_features(rel)
     
             # Append features

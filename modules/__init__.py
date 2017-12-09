@@ -5,3 +5,6 @@ from .features_f3 import FeaturesF3
 from .tfIdfCalculator import TfIdfCalculator
 from .featureCollection import FeatureCollection
 from .featureRoot import FeatureRoot
+from .dataMakerForW2V import DataMakerForW2V
+from .w2Vtester import W2Vtester
+from .w2V_Calculator import W2V_Calculator

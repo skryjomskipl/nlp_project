@@ -417,10 +417,10 @@ class FeaturesF3:
         """
         posAfterE1=self.__POS_AfterE1(abstract,rel,1)
         X.append(posAfterE1)
-        posBeforeE2=self.__POS_BeforeE2(abstract,rel,0)        
-        X.append(posBeforeE2)
-        posBeforeE2=self.__POS_BeforeE2(abstract,rel,1)        
-        X.append(posBeforeE2)
+        #posBeforeE2=self.__POS_BeforeE2(abstract,rel,0)        
+        #X.append(posBeforeE2)
+        #posBeforeE2=self.__POS_BeforeE2(abstract,rel,1)        
+        #X.append(posBeforeE2)
         
         #choose posAfterE1 posBeforeE2
         #note : change functions to on and off if idf , can hurt accuracy if tf idf use , sometimes
