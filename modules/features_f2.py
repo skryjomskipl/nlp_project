@@ -1,5 +1,5 @@
-# Features #2
-# This file is created by  Samantha 
+# Features #F2
+# Written by  Samantha 
 
 import nltk
 from common import *
@@ -14,6 +14,7 @@ class FeaturesF2:
     def __init__(self, utils, dataset):
         self.utils = utils
         self.dataset = dataset
+        #define the stop words used in stop word removal
         self.stop_words=['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours',
         'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers',
         'herself', 'it', 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves',
@@ -29,8 +30,8 @@ class FeaturesF2:
       
     
     def __first_word_after_E1(self,abstract,rel,flag):
-          #First word after the first Entity E1 but in between the entities
-        
+          #Bigram of the first word after the first Entity E1 but in between the entities
+          #flag: 1- with stop words, 0 -without stop words
         delimeter=['.']     
         a = abstract.get_entity_ids(rel.a)
         b = abstract.get_entity_ids(rel.b)
@@ -41,8 +42,10 @@ class FeaturesF2:
         j = min(b)
          
         while i>=0:
+            #checks whether word equals to the first word of the entity 2
             if abstract.obj[i].value.lower()==abstract.obj[j].value.lower():
                 break
+            #Checks whether it is the end of the sentence
             if '.' in abstract.obj[i].value.lower():
                 break 
             #stop words removed
@@ -52,15 +55,11 @@ class FeaturesF2:
             i=i+1  
             
         word = abstract.obj[i].value.lower()
-        #print("i after--->",word)
+        #lemmatization
         ps = PorterStemmer()
-         
       
         #calculate bigram
-        utils = Utils()
-        bb= Bigram(utils)
-        bigram = bb.get_bigram(ps.stem(word))
-        print("bigrams :   ",bigram)
+        bigram = Bigram.get_abstract(self,abstract,ps.stem(word)) 
         if bigram:
             for x in bigram:
                 bb=x[1]
@@ -71,7 +70,7 @@ class FeaturesF2:
     
         
     def __first_word_before_E2(self,abstract,rel,flag):
-          #First word before the second Entity E2 but in between the entities
+          #Bigram of the First word before the second Entity E2 but in between the entities
         
         delimeter=['.']     
         a = abstract.get_entity_ids(rel.a)
@@ -83,8 +82,10 @@ class FeaturesF2:
         i = min(b)-1
          
         while i>=0:
+            #checks whether word equals to the first word of the entity 2
             if abstract.obj[i].value.lower()==abstract.obj[j].value.lower():
                 break
+            #Checks whether it is the end of the sentence
             if '.' in abstract.obj[i].value.lower():
                 break 
             #stop words removed
@@ -95,12 +96,12 @@ class FeaturesF2:
             i=i-1  
             
         word = abstract.obj[i].value.lower()
-        #print("i after--->",word)
+        #lemmatization
         ps = PorterStemmer()
          
       
         #calculate bigram
-        bigram = Bigram.get_abstract(ps.stem(word))
+        bigram = Bigram.get_abstract(self,abstract,ps.stem(word)) 
         if bigram:
             for x in bigram:
                 bb=x[1]
@@ -111,7 +112,7 @@ class FeaturesF2:
     
     
     def __words_between_Entities(self,abstract,rel,flag):
-          #Other words in between the two entities
+          #Highest bigram value of the words in between entities
         
         delimeter=['.'] 
         a = abstract.get_entity_ids(rel.a)
@@ -144,9 +145,9 @@ class FeaturesF2:
                  
             i=i+1  
             
-        #print (words)
+        #calculate bigram
         for x in words:
-            bigram = Bigram.get_abstract(x)
+            bigram = Bigram.get_abstract(self,abstract, x)
             if bigram:
                 for x in bigram:
                     bb=x[1]
@@ -154,7 +155,7 @@ class FeaturesF2:
                   
             if not bigram:
                     bb=0
-        #print(bigram_arr) 
+        #select the word that produces highest bigram value
         if bigram_arr:
             max_b=max(bigram_arr)
             
@@ -164,7 +165,7 @@ class FeaturesF2:
         return max_b
    
     def __POStypes_between_Entities(self,abstract,rel,flag):
-          # number of different POS types in between the entities
+          # number of unique POS types in between the entities
         
         delimeter=['.']
         a = abstract.get_entity_ids(rel.a)
@@ -180,7 +181,7 @@ class FeaturesF2:
         words=[] 
         #array to store the POS of words between entities
         postags=[]
-        #POS function
+        #Apply POS function
         tokens = []
         
         for obj in abstract.obj:
@@ -191,7 +192,7 @@ class FeaturesF2:
         while i>=0:
             if abstract.obj[i].value.lower()==abstract.obj[j].value.lower():
                 break
-            
+          
             #stop when sentence ends
             if '.' in abstract.obj[i].value.lower():
                 break 
@@ -217,7 +218,7 @@ class FeaturesF2:
         return unique_POS_count 
     
     def __POStypes_before_E1(self,abstract,rel,flag):
-          #number of different POS types before E1
+          #number of unique POS types before E1
         
         delimeter=['.']
     
@@ -266,7 +267,7 @@ class FeaturesF2:
         return unique_POS_count 
     
     def __POStypes_after_E2(self,abstract,rel,flag):
-          #number of different POS types after E2
+          #number of unique POS types after E2
         
         delimeter=['.']
     
@@ -448,44 +449,61 @@ class FeaturesF2:
         return pos 
     
     def get_features(self, rel):
+        #All features implemented are mentioned here
         X = []
-        # Prepare stuff
         abstract = self.dataset.get_abstract(rel.abstract)
-         
-        #first_word_after_E1=self.__first_word_after_E1(abstract,rel,0)
-        #first_word_after_E1=self.__first_word_after_E1(abstract,rel,1)
-        #X.append(  first_word_after_E1)
         
-        #first_word_before_E2=self.__first_word_before_E2(abstract,rel,0)
-        #first_word_before_E2=self.__first_word_before_E2(abstract,rel,1)
-        #X.append(  first_word_before_E2)
+        #Bigram of the first word after E1 without stop words
+        first_word_after_E1=self.__first_word_after_E1(abstract,rel,0)
+        X.append(  first_word_after_E1)
+        #Bigram of the first word after E1 with stop words
+        first_word_after_E1=self.__first_word_after_E1(abstract,rel,1)
+        X.append(  first_word_after_E1)
         
-        #words_between_Entities=self.__words_between_Entities(abstract,rel,0)
-        #words_between_Entities=self.__words_between_Entities(abstract,rel,1)
-        #X.append(  words_between_Entities)
+        #Bigram of the first word before E2 without stop words
+        first_word_before_E2=self.__first_word_before_E2(abstract,rel,0)
+        X.append(  first_word_before_E2)
+        #Bigram of the first word before E2 with stop words
+        first_word_before_E2=self.__first_word_before_E2(abstract,rel,1)
+        X.append(  first_word_before_E2)
         
+        #Highest bigram value of words in between entities without stop words
+        words_between_Entities=self.__words_between_Entities(abstract,rel,0)
+        X.append(  words_between_Entities)
+        #Highest bigram value of words in between entities - with stop words
+        words_between_Entities=self.__words_between_Entities(abstract,rel,1)
+        X.append(  words_between_Entities)
+        
+        #number of unique POS types in between the entities  without stop words
         POStypes_between_Entities=self.__POStypes_between_Entities(abstract,rel,0)
         X.append(  POStypes_between_Entities)
+        #number of unique POS types in between the entities - with stop words
         POStypes_between_Entities=self.__POStypes_between_Entities(abstract,rel,1)
         X.append(  POStypes_between_Entities)
         
+        #number of unique POS types Entity1 (E1) without stop words
         POStypes_before_E1=self.__POStypes_before_E1(abstract,rel,0)
         X.append(  POStypes_before_E1)
+        #number of unique POS types Entity1 (E1) - with stop words
         POStypes_before_E1=self.__POStypes_before_E1(abstract,rel,1)
         X.append(  POStypes_before_E1)
-        
+       
+        #number of unique POS types Entity 2 (E2) - without stop words
         POStypes_after_E2=self.__POStypes_after_E2(abstract,rel,0)
         X.append(  POStypes_after_E2)
+        #number of unique POS types Entity 2 (E2) - with stop words
         POStypes_after_E2=self.__POStypes_after_E2(abstract,rel,1)
         X.append(  POStypes_after_E2)
         
+        #POS type of the word with highest tf-idf score in between the entities 
         POStype_highest_tfidf_between_entities=self.__POStype_highest_tfidf_between_entities(abstract,rel)
         X.append(  POStype_highest_tfidf_between_entities)
-        
+        #POS type of the word with highest tf-idf score in before Entity1 (E1) 
         POStype_highest_tfidf_before_E1=self.__POStype_highest_tfidf_before_E1(abstract,rel)
         X.append(  POStype_highest_tfidf_before_E1)
-        
+        #POS type of the word with highest tf-idf score in after Entity 2 (E2)
         POStype_highest_tfidf_after_E2=self.__POStype_highest_tfidf_after_E2(abstract,rel)
         X.append(  POStype_highest_tfidf_after_E2)
+      
        
         return X
