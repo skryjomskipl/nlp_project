@@ -4,6 +4,7 @@ from sklearn import tree
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 import sklearn.metrics as skl_metrics
+import imblearn.metrics as imb_metrics
 
 import nltk
 from nltk.tag.perceptron import PerceptronTagger
@@ -78,7 +79,16 @@ class Utils:
         return skl_metrics.precision_score(y_true, y_pred, average = 'macro') * 100
     
     def get_recall(self, y_true, y_pred):
-        return skl_metrics.recall_score(y_true, y_pred, average='macro')  
+        return skl_metrics.recall_score(y_true, y_pred, average='macro') * 100
+
+    def get_sensitivity_tc(self, y_true, y_pred):
+        return imb_metrics.sensitivity_score(y_true, y_pred, average = 'binary') * 100
+
+    def get_specificity_tc(self, y_true, y_pred):
+        return imb_metrics.specificity_score(y_true, y_pred, average = 'binary') * 100
+
+    def get_gmean_tc(self, y_true, y_pred):
+        return imb_metrics.geometric_mean_score(y_true, y_pred, average = 'binary') * 100
 
     def do_split(self, data, train_perc, seed = 0):
         if train_perc >= 1 or train_perc <= 0:

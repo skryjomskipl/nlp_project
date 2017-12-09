@@ -3,10 +3,12 @@
 class FeaturesF1:
     utils = None
     dataset = None
+    directionality = False
 
-    def __init__(self, utils, dataset):
+    def __init__(self, utils, dataset, directionality):
         self.utils = utils
         self.dataset = dataset
+        self.directionality = directionality
     
     def __get_sentence_objects(self, abstract, a, b):
         # NOTE:  I know that it is the most lame approach ever, but who cares... ;)
@@ -57,8 +59,44 @@ class FeaturesF1:
             return utils.get_level_from_name("TOPIC")
 
         return 0
+
+    def __get_features_directionality(self, rel):
+        X = []
+
+        # Prepare stuff
+        abstract = self.dataset.get_abstract(rel.abstract)
+        a = abstract.get_entity_ids(rel.a)
+        b = abstract.get_entity_ids(rel.b)
+
+        # Feature 1 - Word distance between tags after lowercasing and stopwords removal
+        objs_between_entities = abstract.obj[max(a):min(b)]
+        objs_processed = [obj for obj in objs_between_entities if not obj.value.lower() in self.utils.get_stopwords()]
+
+        distance = len(objs_processed)
+        X.append(distance)
+
+        # Feature 2 - POS tag of the last word in the entity sequence
+        a_id = max(a)
+        b_id = max(b)
+        
+        a_pos = abstract.pos_tags[a_id][1]
+        b_pos = abstract.pos_tags[b_id][1]
+
+        X.append(self.utils.get_feature_from_pos_tagger(a_pos))
+        X.append(self.utils.get_feature_from_pos_tagger(b_pos))
+
+        # Feature 3 - Asymetric vs symetric relationship
+        if rel.type == "COMPARE":
+            X.append(0)
+        else:
+            X.append(1)
+
+        return X
     
     def get_features(self, rel):
+        if self.directionality:
+            return self.__get_features_directionality(rel)
+
         X = []
 
         # Prepare stuff

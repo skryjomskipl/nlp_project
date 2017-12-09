@@ -38,7 +38,7 @@ class FeatureExtraction:
 
             count += 1
 
-    def prepare_data(self, features_state, test_dataset = False):
+    def prepare_data(self, features_state, test_dataset = False, directionality = False):
         X = []
         Y = []
 
@@ -48,7 +48,7 @@ class FeatureExtraction:
         f3 = None
 
         if features_state[0]:
-            f1 = FeaturesF1(self.utils, self.dataset)
+            f1 = FeaturesF1(self.utils, self.dataset, directionality)
         
         if features_state[1]:
             f2 = FeaturesF2(self.utils, self.dataset)
@@ -77,7 +77,13 @@ class FeatureExtraction:
 
             # Append label
             if not test_dataset:
-                y = self.utils.get_level_from_name(rel.type)
-                Y.append(y)
+                if directionality:
+                    if rel.reverse:
+                        Y.append(1)
+                    else:
+                        Y.append(0)
+                else:
+                    y = self.utils.get_level_from_name(rel.type)
+                    Y.append(y)
 
         return X, Y

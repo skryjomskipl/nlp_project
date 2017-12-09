@@ -138,13 +138,13 @@ class Dataset:
 
     def read(self, utils):
         """Reading dataset"""
-        print('Reading dataset from path: ', self.path, sep = '')
+        #print('Reading dataset from path: ', self.path, sep = '')
 
         if not self.__parse(utils):
             print('Failed at parsing dataset!')
             return False
 
-        print('Reading relations from path: ', self.path_relations, sep = '')
+        #print('Reading relations from path: ', self.path_relations, sep = '')
 
         if not self.__parse_relations(utils):
             print('Failed at parsing relations!')

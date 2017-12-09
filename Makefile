@@ -10,25 +10,17 @@ all:
 	@echo "Possible actions:"
 	@echo " init"
 	@echo " release"
-	@echo " subtask11_dev"
-	@echo " subtask11_test"
-	@echo " subtask11_spit"
-	@echo " subtask11_kcv"
+	@echo " subtask11"
+	@echo " subtask2"
 
 init:
 	$(PIP) install -r requirements.txt
 
-subtask11_dev:
-	$(PYTHON) script1.py
+subtask11:
+	$(PYTHON) uberscript.py subtask11
 
-subtask11_test:
+subtask2:
 	$(PYTHON) script2.py
-
-subtask11_split:
-	$(PYTHON) script3.py
-
-subtask11_kcv:
-	$(PYTHON) script4.py
 
 release:
 	find . -name '*.pyc' -exec rm -f {} \;
