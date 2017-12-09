@@ -1,9 +1,19 @@
 Proposed solution depends on the following off-the-shelf libraries:
-
-- NLTK
- Website: http://www.nltk.org
-
-- Scikit-Learn, website:
- Website: http://scikit-learn.org/stable/
+	- NLTK
+		Website: http://www.nltk.org
+	- Scikit-Learn, website:
+		Website: http://scikit-learn.org/stable/
+	- Imbalanced-Learn (imblearn), website:
+		Website: http://contrib.scikit-learn.org/imbalanced-learn/stable/
 
 Both of them can be installed by following the instructions provided in the INSTALL file.
+**Note :  You don't have to install W2V but if you want to create bin file then you must install word2vec and follow steps mentioned in install file.
+
+	-word2vec
+		Websites : 	http://search.cpan.org/~cuffyca/Word2vec-Interface/
+					http://search.cpan.org/~cuffyca/Word2vec-Interface/lib/Word2vec/Interface.pm
+					http://search.cpan.org/~cuffyca/Word2vec-Interface/utils/Word2vec-Interface.pl 
+
+	- Gensim:
+			https://rare-technologies.com/word2vec-tutorial/
+			https://radimrehurek.com/gensim/models/word2vec.html
